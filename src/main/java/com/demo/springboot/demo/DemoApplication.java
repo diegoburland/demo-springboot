@@ -2,7 +2,9 @@ package com.demo.springboot.demo;
 
 import com.demo.springboot.demo.bean.MyBean;
 import com.demo.springboot.demo.bean.MyBeanWithDependency;
+import com.demo.springboot.demo.bean.MyBeanWithProperties;
 import com.demo.springboot.demo.component.ComponentDependency;
+import com.demo.springboot.demo.pojo.UserPojo;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,13 +16,16 @@ public class DemoApplication implements CommandLineRunner {
 	private ComponentDependency componentDependency;
 	private MyBean myBean;
 	private MyBeanWithDependency myBeanWithDependency;
-
+	private MyBeanWithProperties myBeanWithProperties;
+	private UserPojo userPojo;
 
 	public DemoApplication(
-			@Qualifier("componentTwoImplement") ComponentDependency componentDependency, MyBean myBean, MyBeanWithDependency myBeanWithDependency) {
+			@Qualifier("componentTwoImplement") ComponentDependency componentDependency, MyBean myBean, MyBeanWithDependency myBeanWithDependency, MyBeanWithProperties myBeanWithProperties, UserPojo userPojo) {
 		this.myBean = myBean;
 		this.componentDependency = componentDependency;
 		this.myBeanWithDependency = myBeanWithDependency;
+		this.myBeanWithProperties = myBeanWithProperties;
+		this.userPojo = userPojo;
 	}
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
@@ -31,6 +36,9 @@ public class DemoApplication implements CommandLineRunner {
 		componentDependency.saludar();
 		myBean.print();
 		myBeanWithDependency.printWithDependency();
+		System.out.println(myBeanWithProperties.function());
+		System.out.println(userPojo.getEmail() + " " + userPojo.getPassword() + " " + userPojo.getAge());
+
 	}
 
 
