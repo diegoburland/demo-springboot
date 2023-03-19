@@ -8,6 +8,7 @@ import com.learning.academy.authentication.usergroup.UserGroup;
 import com.learning.academy.authentication.usergroup.UserGroupRepository;
 import com.learning.academy.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -37,7 +38,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
 
-    public Optional<User> getUserById(Integer id) { return userRepository.findById(id);}
+    public Optional<User> getUserById(Integer id) { return userRepository.findByIdAndActiveStatus(id);}
 
     @Override
     public Optional<User> getUserByEmail(String email) {
@@ -46,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return userRepository.findAllByActiveStatus();
     }
 
     @Override
@@ -81,5 +82,14 @@ public class UserServiceImpl implements UserService {
             return Optional.of(user);
         }
         return Optional.empty();
+    }
+
+    public void updateStatus(Integer userId, String status) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            userRepository.updateStatus(userId, status);
+        } else {
+            throw new UsernameNotFoundException("User not found with id: " + userId);
+        }
     }
 }

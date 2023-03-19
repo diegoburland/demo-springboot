@@ -29,12 +29,12 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String phone;
-    private String status;
     public static final String ACTIVE = "ACTIVE";
     public static final String INACTIVE = "INACTIVE";
     public static final String PENDING = "PENDING";
     public static final String DELETED = "DELETED";
     public static final String SUSPENDED = "SUSPENDED";
+    private String status = "PENDING";
 
     @Transient
     private Set<Permission> permissions = new HashSet<>();

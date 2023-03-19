@@ -10,5 +10,6 @@ public interface UserService {
     List<User> getAllUsers();
     User updateUser(User user);
     void deleteUser(Integer id);
+    void updateStatus(Integer userId, String status);
 }
 
