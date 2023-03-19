@@ -26,4 +26,7 @@ logging:
               BasicBinder: TRACE
               BasicExtractor: TRACE
       springframework:
+        boot:
+          autoconfigure: warn
+
 

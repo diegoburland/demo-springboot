@@ -15,20 +15,9 @@ public class UserGroupService {
     @Autowired
     private UserGroupRepository userGroupRepository;
 
-    public UserGroup createUserGroup(UserGroup userGroup) {
+    public UserGroup createUserGroup(UserGroup userGroup) {  return userGroupRepository.save(userGroup);}
 
-        try {
-            return userGroupRepository.save(userGroup);
-
-        } catch (NameAlreadyExistsException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        }
-
-    }
-
-    public Optional<UserGroup> getUserGroupById(Long id) {
-        return userGroupRepository.findById(id);
-    }
+    public Optional<UserGroup> getUserGroupById(Long id) { return userGroupRepository.findById(id);}
 
     public List<UserGroup> getAllUserGroups() {
         return userGroupRepository.findAll();

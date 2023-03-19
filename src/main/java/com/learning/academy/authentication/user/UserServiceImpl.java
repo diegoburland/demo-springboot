@@ -1,12 +1,19 @@
 package com.learning.academy.authentication.user;
 
+import com.learning.academy.authentication.grouppermission.GroupPermission;
+import com.learning.academy.authentication.grouppermission.GroupPermissionRepository;
+import com.learning.academy.authentication.premission.Permission;
 import com.learning.academy.authentication.premission.PermissionRepository;
+import com.learning.academy.authentication.usergroup.UserGroup;
+import com.learning.academy.authentication.usergroup.UserGroupRepository;
+import com.learning.academy.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -17,57 +24,62 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PermissionRepository permissionRepository;
 
+    @Autowired
+    private UserGroupRepository userGroupRepository;
+
+    @Autowired
+    private GroupPermissionRepository groupPermissionRepository;
+
     @Override
     public User createUser(User user) {
-        try {
-            return userRepository.save(user);
-        } catch (Exception e) {
-            throw new RuntimeException("Error creating user: " + e.getMessage());
-        }
+        return userRepository.save(user);
     }
 
     @Override
-    public Optional<User> getUserById(Integer id) {
-        try {
-            return userRepository.findById(id);
-        } catch (Exception e) {
-            throw new RuntimeException("Error getting user by ID: " + e.getMessage());
-        }
-    }
+
+    public Optional<User> getUserById(Integer id) { return userRepository.findById(id);}
 
     @Override
     public Optional<User> getUserByEmail(String email) {
-        try {
-            return userRepository.findByEmail(email);
-        } catch (Exception e) {
-            throw new RuntimeException("Error getting user by email: " + e.getMessage());
-        }
+        return userRepository.findByEmail(email);
     }
 
     @Override
     public List<User> getAllUsers() {
-        try {
-            return userRepository.findAll();
-        } catch (Exception e) {
-            throw new RuntimeException("Error getting all users: " + e.getMessage());
-        }
+        return userRepository.findAll();
     }
 
     @Override
     public User updateUser(User user) {
-        try {
-            return userRepository.save(user);
-        } catch (Exception e) {
-            throw new RuntimeException("Error updating user: " + e.getMessage());
-        }
+        return userRepository.save(user);
     }
 
     @Override
     public void deleteUser(Integer id) {
-        try {
-            userRepository.deleteById(id);
-        } catch (Exception e) {
-            throw new RuntimeException("Error deleting user: " + e.getMessage());
+        userRepository.deleteById(id);
+    }
+
+    public Optional<User> getUserWithPermissions(Integer userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            List<UserGroup> userGroups = userGroupRepository.findByUserId(userId);
+
+            Set<Permission> permissions = new HashSet<>();
+            for (UserGroup userGroup : userGroups) {
+                List<GroupPermission> groupPermissions = groupPermissionRepository.findByGroupId(userGroup.getGroup().getId());
+                for (GroupPermission groupPermission : groupPermissions) {
+                    if(groupPermission.getPermission() != null){
+                        permissions.add(groupPermission.getPermission());
+                    }
+                }
+            }
+
+            user.setPermissions(permissions);
+
+            return Optional.of(user);
         }
+        return Optional.empty();
     }
 }
