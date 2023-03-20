@@ -55,4 +55,15 @@ public class Office {
     @ManyToOne
     @JoinColumn(name = "city_id", nullable = false)
     private City city;
+
+    @Column(nullable = false, columnDefinition = "varchar(10) default 'ACTIVE'")
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

@@ -1,6 +1,7 @@
 package com.learning.academy.authentication.user;
 
 import com.learning.academy.authentication.premission.Permission;
+import com.learning.academy.branch.employee.Employee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -76,4 +77,8 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    @OneToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 }

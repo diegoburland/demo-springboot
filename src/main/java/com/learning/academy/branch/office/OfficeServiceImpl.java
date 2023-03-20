@@ -66,5 +66,6 @@ public class OfficeServiceImpl implements OfficeService {
     public List<Office> searchOffices(String keyword) {
         return officeRepository.search(keyword);
     }
+
 }
 
