@@ -1,5 +1,6 @@
 package com.learning.academy.location.subdivision;
 
+import com.learning.academy.exception.FoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,11 @@ public class SubdivisionServiceImpl implements SubdivisionService {
 
     @Override
     public Subdivision saveSubdivision(Subdivision subdivision) {
-        return subdivisionRepository.save(subdivision);
+        Subdivision savedSubdivision = subdivisionRepository.save(subdivision);
+        if (savedSubdivision == null) {
+            throw new FoundException("Unable to save the subdivision.");
+        }
+        return savedSubdivision;
     }
 
     @Override

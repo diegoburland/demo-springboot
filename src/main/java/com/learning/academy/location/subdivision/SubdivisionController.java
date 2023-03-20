@@ -1,5 +1,6 @@
 package com.learning.academy.location.subdivision;
 
+import com.learning.academy.exception.FoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/subdivisions")
+@RequestMapping("/api/v1/subdivisions")
 public class SubdivisionController {
 
     private final SubdivisionService subdivisionService;
@@ -46,8 +47,13 @@ public class SubdivisionController {
 
     @PostMapping
     public ResponseEntity<Subdivision> createSubdivision(@RequestBody Subdivision subdivision) {
-        Subdivision savedSubdivision = subdivisionService.saveSubdivision(subdivision);
-        return new ResponseEntity<>(savedSubdivision, HttpStatus.CREATED);
+        try {
+            Subdivision savedSubdivision = subdivisionService.saveSubdivision(subdivision);
+            return new ResponseEntity<>(savedSubdivision, HttpStatus.CREATED);
+        } catch (FoundException e) {
+            String message = "Unable to create a new subdivision: " + e.getMessage();
+            return new ResponseEntity<>(new Subdivision(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping("/{id}")
